@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>FSEconomy Extension — Settings</title>
+  <style>
+    body { font: 14px system-ui, sans-serif; max-width: 32rem; margin: 1.25rem; }
+    h1 { font-size: 1.1rem; margin: 0 0 1rem; }
+    label { display: block; font-weight: 600; margin-top: 0.75rem; margin-bottom: 0.25rem; }
+    input[type="text"] { box-sizing: border-box; width: 100%; padding: 0.35rem 0.5rem; }
+    button { margin-top: 1rem; padding: 0.4rem 0.85rem; }
+    #status { margin-top: 0.75rem; min-height: 1.25rem; color: #058b00; }
+  </style>
+</head>
+<body>
+  <h1>Configuration</h1>
+  <form id="fse-options-form">
+    <label for="airline">Airline ICAO</label>
+    <input type="text" id="airline" name="airline" autocomplete="off" spellcheck="false"
+      maxlength="8" placeholder="e.g. UAL" />
+
+    <label for="fltnum">Flight number</label>
+    <input type="text" id="fltnum" name="fltnum" autocomplete="off" spellcheck="false"
+      maxlength="16" placeholder="e.g. 1234" />
+
+    <button type="submit">Save</button>
+  </form>
+  <p id="status" aria-live="polite"></p>
+  <script src="options.js"></script>
+</body>
+</html>

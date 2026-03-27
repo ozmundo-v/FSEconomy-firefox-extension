@@ -73,12 +73,14 @@
     return '';
   }
 
-  function openSimBrief(orig, dest, reg, pax) {
+  function openSimBrief(orig, dest, reg, pax, airline, fltnum) {
     const u = new URL(SIMBRIEF_DISPATCH);
     u.searchParams.set('orig', orig);
     u.searchParams.set('dest', dest);
     if (reg) u.searchParams.set('reg', reg);
     if (pax !== '') u.searchParams.set('pax', pax);
+    if (airline) u.searchParams.set('airline', airline);
+    if (fltnum) u.searchParams.set('fltnum', fltnum);
     window.open(u.toString(), '_blank', 'noopener,noreferrer');
   }
 
@@ -111,12 +113,11 @@
         window.alert('Could not read Location or Dest airport codes for this assignment.');
         return;
       }
-      openSimBrief(
-        orig,
-        dest,
-        registrationFromPage(),
-        passengersFromPayloadChart()
-      );
+      const reg = registrationFromPage();
+      const pax = passengersFromPayloadChart();
+      browser.storage.local.get({ airline: '', fltnum: '' }).then((cfg) => {
+        openSimBrief(orig, dest, reg, pax, cfg.airline, cfg.fltnum);
+      });
     });
 
     caption.appendChild(btn);
