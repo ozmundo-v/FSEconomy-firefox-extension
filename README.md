@@ -1,5 +1,7 @@
 # FSEconomy Extension
 
+**Repository:** [github.com/ozmundo-v/FSEconomy-firefox-extension](https://github.com/ozmundo-v/FSEconomy-firefox-extension)
+
 Firefox add-on that adds a few quality-of-life tools on [FSEconomy](https://server.fseconomy.net). It only runs on that site and does not request broad permissions.
 
 ## Features
