@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FSEconomy</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <link href="https://server.fseconomy.net/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+    <link href="FSEconomy_files/jquery-ui.css" rel="stylesheet" type="text/css">
+    <link href="FSEconomy_files/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="FSEconomy_files/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+
+    <link href="FSEconomy_files/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css">
+    <!--<link href="https://cdn.datatables.net/1.13.11/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"> /* looks better without */ -->
+    <link href="FSEconomy_files/responsive.dataTables.min.css" rel="stylesheet" type="text/css">
+
+    <!--<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel='stylesheet prefetch' type="text/css">-->
+    <link rel="stylesheet" href="FSEconomy_files/all.min.css">
+    
+    <link href="FSEconomy_files/Master.css" rel="stylesheet" type="text/css">
+    <link href="FSEconomy_files/tablesorter-style.css" rel="stylesheet" type="text/css">
+    
+    <script src="FSEconomy_files/jquery.min.js"></script>
+    <script src="FSEconomy_files/jquery-ui.min.js"></script>
+    <script src="FSEconomy_files/bootstrap.min.js"></script>
+
+    <!--<script src="//cdn.datatables.net/1.13.11/js/jquery.js"></script> /* v2.1.1 loaded already */ -->
+    <script src="FSEconomy_files/jquery.dataTables.min.js"></script>
+    <script src="FSEconomy_files/dataTables.bootstrap.min.js"></script>
+    <script src="FSEconomy_files/dataTables.responsive.min.js"></script>
+
+
+    <script type="text/javascript" src="FSEconomy_files/jquery.cookie.js"></script>
+    <script type="text/javascript" src="FSEconomy_files/jquery.tablesorter.js"></script>
+    <script type="text/javascript" src="FSEconomy_files/jquery.tablesorter.widgets.js"></script>
+    <script type="text/javascript" src="FSEconomy_files/parser-checkbox.js"></script>
+    <script type="text/javascript" src="FSEconomy_files/parser-timeExpire.js"></script>
+    <script type="text/javascript" src="FSEconomy_files/parser-timeHrMin.js"></script>
+
+    <script src="FSEconomy_files/dataTables.rules.js"></script>
+    <script src="FSEconomy_files/natural-time-delta.js"></script>
+
+    <script src="FSEconomy_files/AutoComplete.js"></script>
+    <script src="FSEconomy_files/highcharts.js"></script>
+    <script src="FSEconomy_files/PopupWindow.js"></script>
+    <script src="FSEconomy_files/doubletaptogo.js"></script>
+    <script src="FSEconomy_files/basil.js"></script>
+    <script src="FSEconomy_files/sysend.js"></script>
+    <script src="FSEconomy_files/debounce.js"></script>
+
+
+    <script type="text/javascript">
+    // Applies wide/narrow layout globally to mainContentDiv and userPrefsContent
+    // content is Wide / container is Narrow
+    $(function() {
+        var override = $('body').data('site-width');
+        var savedWidth = localStorage.getItem('siteWidth');
+        // Main Content div logic
+        var $mainDiv = $('#mainContentDiv');
+        if ($mainDiv.length) {
+            if (override === 'content') {
+                $mainDiv.removeClass('container').addClass('content');
+            } else if (override === 'container') {
+                $mainDiv.removeClass('content').addClass('container');
+            } else if (savedWidth === 'content') {
+                $mainDiv.removeClass('container').addClass('content');
+            } else {
+                $mainDiv.removeClass('content').addClass('container');
+            }
+        }
+        // Sub Content div logic
+        var $prefsDiv = $('#subContentDiv');
+        if ($prefsDiv.length) {
+            if (override === 'content') {
+                $prefsDiv.removeClass('narrowCenter').addClass('narrowLeft');
+            } else if (override === 'container') {
+                $prefsDiv.removeClass('narrowLeft').addClass('narrowCenter');
+            } else if (savedWidth === 'content') {
+                $prefsDiv.removeClass('narrowCenter').addClass('narrowLeft');
+            } else {
+                $prefsDiv.removeClass('narrowLeft').addClass('narrowCenter');
+            }
+        }
+    });
+    </script>
+
+
+<script>
+(function() {
+    function adjustNarrowLeftMargin() {
+        var hasContent = document.querySelector('.content') !== null;
+        var hasContainer = document.querySelector('.container') !== null;
+        if (hasContent || hasContainer) {
+            var elems = document.querySelectorAll('.narrowLeft');
+            for (var i = 0; i < elems.length; i++) {
+                elems[i].style.marginLeft = '0px';
+            }
+        }
+    }
+    document.addEventListener('DOMContentLoaded', adjustNarrowLeftMargin);
+})();
+</script>
+
+
+    <script>
+        // Global Header Offset
+        var FSE_HEADER_OFFSET = 130; // Adjusted to move fixedHeaders down further
+        
+        $( document ).ready(function() {
+            $(".navicon").on("click", function() {
+                $( "body" ).toggleClass("menu-visible");
+                $(".navicon i").toggleClass("fa-times").toggleClass("fa-bars");
+            }); 
+        });
+    </script>
+
+
+	<script>
+	
+		var selectedGroup = ""
+
+		function doSubmit(id)
+		{
+		     document.lflightForm.id.value = id;
+		     document.lflightForm.submit();
+		}
+		function doSubmitAtAirport(id)
+		{
+		     document.aflightForm.id.value = id;
+		     document.aflightForm.submit();
+		}
+		function doSubmitAtOtherAirport(id)
+		{
+		     document.oflightForm.id.value = id;
+		     document.oflightForm.submit();
+		}
+		function doSubmit1(id)
+		{
+		     document.hflightForm.id.value = id;
+		     document.hflightForm.submit();
+		}
+		function doSubmit2(id)
+		{
+		     document.aircraftForm.id.value = id;
+		     document.aircraftForm.type.value = "remove";
+		     document.aircraftForm.submit();
+		}
+		function doSubmit3(id)
+		{
+		     document.aircraftForm.id.value = id;
+		     document.aircraftForm.type.value = "refuel";
+		     document.aircraftForm.submit();
+		}
+		function doSubmit4(id)
+		{
+		     document.groupForm.id.value = id;
+		     document.groupForm.submit();
+		}
+		function doSubmit4Select(e)
+		{
+		     console.log("form value > ", e.selectedOptions[0].text)
+		     console.log("selectedGroup >", selectedGroup)
+		     selectedGroup = e.value
+		     console.log("selectedGroup >", selectedGroup)
+		     document.getElementById('selectedGroup').innerHTML = e.selectedOptions[0].text
+		     $('#confirm-group').modal('show')
+		}
+		
+		function doSubmit5(id)
+		{
+		     document.lflightForm.id.value = id;
+		     document.lflightForm.type.value = "hold";
+		     document.lflightForm.submit();
+		}
+		function doSubmit5AtAirport(id)
+		{
+		     document.aflightForm.id.value = id;
+		     document.aflightForm.type.value = "hold";
+		     document.aflightForm.submit();
+		}
+		function doSubmit5AtOtherAirport(id)
+		{
+		     document.oflightForm.id.value = id;
+		     document.oflightForm.type.value = "hold";
+		     document.oflightForm.submit();
+		}
+		function doSubmit8(id)
+		{
+		     document.hflightForm.id.value = id;
+		     document.hflightForm.type.value = "load";
+		     document.hflightForm.submit();
+		}
+		function doSubmitX(id,hold)
+		{
+			var form = document.getElementById("aircraftForm");
+			
+			form.action = "myflight.jsp";
+			form.event.value = "holdrental";
+			form.id.value = id;
+			form.hold.value = hold;
+
+			form.submit();
+		}
+		function checkAll(field)
+		{
+			for (i = 0; i < field.length; i++)
+		     	field[i].checked = true ;
+		
+			field.checked = true ;  // needed in case of only one box
+		}
+		function checkNone(field)
+		{
+			for (i = 0; i < field.length; i++)
+		     	field[i].checked = false ;
+		
+		   	field.checked = false ;  // needed in case of only one box
+		}
+	</script>
+	
+	<script type="text/javascript">
+
+		var lastChecked = null;
+
+		$(document).ready(function() {
+			var $chkboxes = $('.chkbox');
+			$chkboxes.click(function(e) {
+				$chkboxes = $('.chkbox');
+				if(!lastChecked) {
+					lastChecked = this;
+					return;
+				}
+
+				if(e.shiftKey) {
+					var start = $chkboxes.index(this);
+					var end = $chkboxes.index(lastChecked);
+
+					$chkboxes.slice(Math.min(start,end), Math.max(start,end)+ 1).prop('checked', lastChecked.checked);
+				}
+
+				lastChecked = this;
+			});
+			
+			
+			// confirm that the user wants to flight for a group. Listen to the CONFIRM button
+			$('#confirm-flight-for-group').on('click', function() {
+				console.log(selectedGroup)
+				document.groupForm.id.value = selectedGroup;
+			    document.groupForm.submit();
+			})
+			
+			// opt-in/out of beta
+			$('#back-old').on('click', function(){
+				//window.location.replace("/myflightold.jsp");
+				window.open('/myflightold.jsp', "_blank") || window.location.replace('/myflightold.jsp');
+			})
+		});
+
+		$(function() 
+		{		
+			$.extend($.tablesorter.defaults, 
+			{
+				widthFixed: false,
+				widgets : ['zebra','columns']
+			});
+		 
+			$('.holdTable').tablesorter();		
+		});
+		
+		$(function() 
+		{		
+			$.extend($.tablesorter.defaults, 
+			{
+				widthFixed: false,
+				widgets : ['zebra','columns']
+			});
+		
+			$('.assignmentTable').tablesorter();
+
+			$('.mapassignment').click(function () {
+				var depart = this.getAttribute("data-depart");
+				var dest = this.getAttribute("data-dest");
+
+				$("#mapData").load("gmapassignmentpv.jsp?dest=" + dest + "&depart=" + depart);
+
+				$("#mapModal").modal('show');
+			});
+
+			$('#mapModal').on('shown.bs.modal', function () {
+				initMap();
+			});
+		});
+
+        var isMapOpen = false;
+        sysend.on('FSEMapIAmOpen', function() {
+            isMapOpen = true;
+        });
+        sysend.on('FSEMapIHaveClosed', function() {
+            isMapOpen = false;
+        });
+
+        function updateMap() {
+            var w = window.open("","FSEOneMapToRuleThemAll");
+            var url = w.location.origin + "/static/apps/theonemap/";
+            if (w.location.href !== url) {
+                w.location.href = "/static/apps/theonemap";
+            }
+            isMapOpen = true;
+            w.focus();
+            sysend.broadcast("FSEMapEvent", {event: "MyFlight"})
+
+            return false;
+        }
+	</script>
+</head>
+
+<body>
+
+
+
+
+
+
+<div style="background-color: lightcoral; color: #ffffff; display: none">
+	Test Server!!
+</div>
+<div class="header loggedin">
+	<div class="header-xs">
+		<div class="navicon"><i class="fa fa-bars"></i></div>
+		<h1>FSEconomy</h1>
+	</div>
+	<div id="login-block">
+	
+		<form class="top user-data" method="post" action="/userctl">
+			<p>Logged in as Ozmundo <input type="submit" name="event" class="button" value="Log out"></p>
+			<ul>
+				<li>
+					<strong>Cash balance:</strong>
+					$68,890.29
+				</li>
+				<li>
+					<strong>Bank balance:</strong>
+					$576,374.45
+				</li>
+				<li>
+	
+				<strong>Hours Flown:</strong> <a class="hours" href="https://server.fseconomy.net/hours.jsp">6.29</a> <span>in last 48</span>
+	
+				</li>
+			</ul>
+		</form>
+	
+	</div>
+</div>
+
+
+
+
+
+
+
+<script type="text/javascript">
+	$( function() 
+	{
+		$('#nav li:has(ul)').doubleTapToGo();
+	});
+		
+    var isMapOpen = false;
+    sysend.on('FSEMapIAmOpen', function() {
+        isMapOpen = true;
+    });
+    sysend.on('FSEMapIHaveClosed', function() {
+        isMapOpen = false;
+    });
+
+    function updateMap() {
+        var w = window.open("","FSEOneMapToRuleThemAll");
+        var url = w.location.origin + "/static/apps/theonemap/";
+        if (w.location.href !== url) {
+            w.location.href = "/static/apps/theonemap";
+        }
+        isMapOpen = true;
+        w.focus();
+
+        return false;
+    }
+</script>
+<ul class="main-menu" id="nav" role="navigation">
+    <li>
+        <a href="https://server.fseconomy.net/index.jsp">Home</a>
+        <ul>
+        
+            <li><a href="https://server.fseconomy.net/edituser.jsp">Change Preferences</a></li>
+            <li><a href="https://server.fseconomy.net/changepassword.jsp">Change Password</a></li>
+            <li><a href="https://server.fseconomy.net/datafeeds.jsp">Data Feeds</a></li>
+            <li><a href="https://server.fseconomy.net/score.jsp?type=pilots">Pilots</a></li>
+            <li><a href="https://server.fseconomy.net/score.jsp?type=groups">Groups</a></li>
+            <li><a href="https://server.fseconomy.net/aircraftmodels.jsp">Aircraft Models</a></li>
+        
+            <li><a href="https://www.fseconomy.net/" target="_blank">FSE Forums</a></li>
+        </ul>
+    </li>
+
+
+        <li><a href="https://server.fseconomy.net/airport.jsp">Airports</a></li>
+        <li><a id="myflight" href="https://server.fseconomy.net/myflight.jsp">My Flight</a></li>
+        <li><a href="https://server.fseconomy.net/banksummary.jsp">Banking</a></li>
+        <li><a href="https://server.fseconomy.net/log.jsp">Logs</a>
+            <ul>
+                <li><a href="https://server.fseconomy.net/log.jsp">Flight Logs</a><ul><li><a href="https://server.fseconomy.net/log.jsp?groupid=69671">Aer Bridge Ltd.</a></li><li><a href="https://server.fseconomy.net/log.jsp?groupid=52065">Glacier Air</a></li><li><a href="https://server.fseconomy.net/log.jsp?groupid=105399">Nomadic Travel</a></li><li><a href="https://server.fseconomy.net/log.jsp?groupid=106734">Startup Air La Manche</a></li></ul></li>
+				<li><a href="https://server.fseconomy.net/paymentlog.jsp">Payment Logs</a><ul><li><a href="https://server.fseconomy.net/paymentlog.jsp?groupid=69671">Aer Bridge Ltd.</a></li><li><a href="https://server.fseconomy.net/paymentlog.jsp?groupid=52065">Glacier Air</a></li><li><a href="https://server.fseconomy.net/paymentlog.jsp?groupid=105399">Nomadic Travel</a></li><li><a href="https://server.fseconomy.net/paymentlog.jsp?groupid=106734">Startup Air La Manche</a></li></ul></li>
+            </ul>
+        </li>
+        <li>
+			<a href="https://server.fseconomy.net/aircraft.jsp">Aircraft</a>
+			<ul>
+				<li><a href="https://server.fseconomy.net/aircraft.jsp">Aircraft</a><ul><li><a href="https://server.fseconomy.net/aircraft.jsp?id=69671">Aer Bridge Ltd.</a></li><li><a href="https://server.fseconomy.net/aircraft.jsp?id=52065">Glacier Air</a></li><li><a href="https://server.fseconomy.net/aircraft.jsp?id=105399">Nomadic Travel</a></li><li><a href="https://server.fseconomy.net/aircraft.jsp?id=106734">Startup Air La Manche</a></li></ul></li>
+				<li><a href="https://server.fseconomy.net/aircraftforsale.jsp">Purchase Aircraft</a></li>
+			</ul>
+		</li>
+        <li><a href="https://server.fseconomy.net/groups.jsp">Groups</a>
+			<ul>
+				<li><a href="https://server.fseconomy.net/groups.jsp">My Groups</a></li>
+				<li><a href="https://server.fseconomy.net/grouplist.jsp">All Groups</a></li>
+				<li><a href="">Assignments</a><ul><li><a href="https://server.fseconomy.net/groupassignments.jsp?groupid=69671">Aer Bridge Ltd.</a></li><li><a href="https://server.fseconomy.net/groupassignments.jsp?groupid=52065">Glacier Air</a></li><li><a href="https://server.fseconomy.net/groupassignments.jsp?groupid=105399">Nomadic Travel</a></li><li><a href="https://server.fseconomy.net/groupassignments.jsp?groupid=106734">Startup Air La Manche</a></li></ul></li>
+				<li><a href="">Pay Group</a><ul><li><a href="https://server.fseconomy.net/pay.jsp?groupid=69671">Aer Bridge Ltd.</a></li><li><a href="https://server.fseconomy.net/pay.jsp?groupid=52065">Glacier Air</a></li><li><a href="https://server.fseconomy.net/pay.jsp?groupid=105399">Nomadic Travel</a></li><li><a href="https://server.fseconomy.net/pay.jsp?groupid=106734">Startup Air La Manche</a></li></ul></li>
+				<li><a href="">Memberships</a><ul><li><a href="https://server.fseconomy.net/memberships.jsp?groupid=105399">Nomadic Travel</a></li></ul></li>
+			</ul>
+		</li>
+		<li><a href="https://server.fseconomy.net/goods.jsp">Goods</a>
+			<ul>
+				<li><a href="https://server.fseconomy.net/goods.jsp">Goods</a><ul><li><a href="https://server.fseconomy.net/goods.jsp?groupid=105399">Nomadic Travel</a></li></ul></li>
+				<li><a href="https://server.fseconomy.net/goodsassignments.jsp">Transfer Assignments</a><ul><li><a href="https://server.fseconomy.net/goodsassignments.jsp?transferid=105399">Nomadic Travel</a></li></ul></li>
+			</ul>
+		</li>
+		<li><a href="https://server.fseconomy.net/fbo.jsp">FBO</a>
+			<ul>
+				<li><a href="https://server.fseconomy.net/fbo.jsp">FBO</a><ul><li><a href="https://server.fseconomy.net/fbo.jsp?id=105399">Nomadic Travel</a></li></ul></li>
+				<li><a href="https://server.fseconomy.net/fbomgt.jsp">FBO Mgt</a><ul><li><a href="https://server.fseconomy.net/fbomgt.jsp?id=105399">Nomadic Travel</a></li></ul></li>
+				<li><a href="https://server.fseconomy.net/fbofacility.jsp">Facilities</a><ul><li><a href="https://server.fseconomy.net/fbofacility.jsp?id=105399">Nomadic Travel</a></li></ul></li>
+				<li><a onclick="updateMap()">FBO Maps</a></li>
+				<li><a href="https://server.fseconomy.net/fbosforsale.jsp">Purchase FBO</a></li>
+				<li><a href="https://server.fseconomy.net/fbolotteries.jsp">FBO Lotteries</a></li>
+			</ul>
+		</li>
+		<!-- <li><a href="menumap.jsp">Sitemap</a></li> -->
+
+</ul>
+
+<div id="wrapper">
+<div class="content myflight">
+
+	<div style="display: inline">
+		<h1>My Flight <button type="button" id="back-old" class="btn btn-primary btn-xs">View old version</button></h1>
+	</div>
+
+	<div class="myflight-status bg-info">
+		<h2>Ready for departure from
+            <a href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+                LFAV
+            </a>
+        </h2>
+
+                <h3>This flight will be flown for “Ozmundo”.</h3>
+      	         	
+						<form method="post" action="userctl" name="groupForm">
+					        <input type="hidden" name="event" value="flyForGroup">
+				    	    <input type="hidden" name="id">
+							<input type="hidden" name="returnpage" value="/myflight.jsp">
+							
+							<div class="form-group">
+								<label for="fly-for-group">If you want to fly this flight for a group, select its name:</label>
+	            	    		<select name="fly-for-group" id="fly-for-group" onchange="doSubmit4Select(this)" class="form-control">
+		            	    		<option value="" selected="selected">Select a group</option>
+
+    	                        	<option value="69671">Aer Bridge Ltd.</option>
+
+    	                        	<option value="52065">Glacier Air</option>
+
+    	                        	<option value="105399">Nomadic Travel</option>
+
+    	                        	<option value="106734">Startup Air La Manche</option>
+
+	        	                </select>
+	                     	</div>
+	                     </form>
+                     </div>
+
+		<h2>Assignments</h2>
+		
+	
+	<script type="text/javascript">
+		var loc = {};
+		var assignment = {};
+		var i = 0;
+	</script>
+
+		
+	<div class="myflight-assignments myflight-assignments--ready">
+		<form method="post" action="userctl" name="lflightForm">
+	    	<input type="hidden" name="event" value="Assignment">
+	    	<input type="hidden" name="id">
+	    	<input type="hidden" name="type" value="remove">
+			<input type="hidden" name="returnpage" value="/myflight.jsp">
+	    	
+	    	<table class="assignmentTable tablesorter-default tablesorter table" role="grid" aria-labelledby="theCaption">
+
+			<caption><span class="glyphicon glyphicon-plane" aria-hidden="true"></span> Ready to depart</caption>
+		
+		    	
+		    	<thead>
+			    	<tr class="tablesorter-headerRow" role="row">
+				    	<th class="sorter-checkbox tablesorter-header tablesorter-headerUnSorted" style="width: 35px; user-select: none;" data-column="0" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="Select: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Select</div></th>
+						<th class="numeric tablesorter-header tablesorter-headerUnSorted" style="width: 75px; user-select: none;" data-column="1" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="Pay: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Pay</div></th>
+						<th style="width: 80px; user-select: none;" data-column="2" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="Location: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Location</div></th>
+						<th style="width: 80px; user-select: none;" data-column="3" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="From: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">From</div></th>
+						<th style="width: 80px; user-select: none;" data-column="4" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="Dest: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Dest</div></th>
+						<th class="numeric tablesorter-header tablesorter-headerUnSorted" style="width: 45px; user-select: none;" data-column="5" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="NM: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">NM</div></th>
+						<th class="numeric tablesorter-header tablesorter-headerUnSorted" style="width: 65px; user-select: none;" data-column="6" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="Brg: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Brg</div></th>
+						<th style="max-width: 400px; user-select: none;" data-column="7" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="Cargo: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Cargo</div></th>
+						<th style="width: 35px; user-select: none;" data-column="8" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="Type: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Type</div></th>
+						<th style="width: 75px; user-select: none;" data-column="9" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="Aircraft: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Aircraft</div></th>
+			           	<th class="sorter-timeExpire tablesorter-header tablesorter-headerUnSorted" style="width: 75px; user-select: none;" data-column="10" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="Expires: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Expires</div></th>
+			           	<th data-column="11" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" style="user-select: none;" aria-sort="none" aria-label="Status: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Status</div></th>
+			           	<th style="max-width: 400px; user-select: none;" data-column="12" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" unselectable="on" aria-sort="none" aria-label="Job Comments: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Job Comments</div></th>
+				   	</tr>
+		     	</thead>
+	     		<tbody aria-live="polite" aria-relevant="all">
+
+	<script type="text/javascript">
+		if (typeof loc['LFAV'] != 'undefined') {
+			var len = loc['LFAV'].length;
+		} 
+		else {
+			loc['LFAV'] = [];
+			len = 0;
+		}
+		loc['LFAV'][len] = [];
+		loc['LFAV'][len].latl = 50.3247;
+		loc['LFAV'][len].lonl = 3.46556;
+		loc['LFAV'][len].pay = "$732.00";
+		loc['LFAV'][len].cargo = "<font color=Green>1 Nomadic Travel Passenger &#128042; (EBBE)</font>";
+		loc['LFAV'][len].status =
+		"Departing".replace(/\s/g,'').toLowerCase();
+		loc['LFAV'][len].dist = 56;
+		loc['LFAV'][len].dest = [];
+		loc['LFAV'][len].dest.icao = 'EBBE';
+		loc['LFAV'][len].dest.latl = 50.7578;
+		loc['LFAV'][len].dest.lonl = 4.767;
+		var mapCenter = {latl: 50.3247, lonl: 3.46556};
+	</script>
+
+				<tr class="odd">
+					<td class="updateCheckbox">
+						<input class="chkbox" type="checkbox" id="mycheckbox0" name="select" value="453771744">
+					</td>
+					<td class="numeric">$732.00</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/large-airport-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/military-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Beauvechain AB, Beauvechain, Belgium" href="https://server.fseconomy.net/airport.jsp?icao=EBBE">
+							EBBE
+						</a>
+					</td>
+					<td class="numeric">56</td>
+					<td class="numeric nowrap">
+						62 
+						<img src="FSEconomy_files/set2_1.gif">
+					</td>
+					<td><font color="Green">1 Nomadic Travel Passenger &#128042; (EBBE)</font></td>
+
+                    <td class="assignmentType">T</td>
+		        	<td>[N/A]</td>
+					<td class="nowrap">
+						
+						
+						5 days
+					</td>
+					<td>Departing</td>
+		        	<td></td>
+				</tr>
+
+	<script type="text/javascript">
+		if (typeof loc['LFAV'] != 'undefined') {
+			var len = loc['LFAV'].length;
+		} 
+		else {
+			loc['LFAV'] = [];
+			len = 0;
+		}
+		loc['LFAV'][len] = [];
+		loc['LFAV'][len].latl = 50.3247;
+		loc['LFAV'][len].lonl = 3.46556;
+		loc['LFAV'][len].pay = "$732.00";
+		loc['LFAV'][len].cargo = "<font color=Green>1 Nomadic Travel Passenger &#128042; (EBBE)</font>";
+		loc['LFAV'][len].status =
+		"Departing".replace(/\s/g,'').toLowerCase();
+		loc['LFAV'][len].dist = 56;
+		loc['LFAV'][len].dest = [];
+		loc['LFAV'][len].dest.icao = 'EBBE';
+		loc['LFAV'][len].dest.latl = 50.7578;
+		loc['LFAV'][len].dest.lonl = 4.767;
+		var mapCenter = {latl: 50.3247, lonl: 3.46556};
+	</script>
+
+				<tr class="even">
+					<td class="updateCheckbox">
+						<input class="chkbox" type="checkbox" id="mycheckbox1" name="select" value="453770258">
+					</td>
+					<td class="numeric">$732.00</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/large-airport-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/military-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Beauvechain AB, Beauvechain, Belgium" href="https://server.fseconomy.net/airport.jsp?icao=EBBE">
+							EBBE
+						</a>
+					</td>
+					<td class="numeric">56</td>
+					<td class="numeric nowrap">
+						62 
+						<img src="FSEconomy_files/set2_1.gif">
+					</td>
+					<td><font color="Green">1 Nomadic Travel Passenger &#128042; (EBBE)</font></td>
+
+                    <td class="assignmentType">T</td>
+		        	<td>[N/A]</td>
+					<td class="nowrap">
+						
+						
+						5 days
+					</td>
+					<td>Departing</td>
+		        	<td></td>
+				</tr>
+
+	<script type="text/javascript">
+		if (typeof loc['LFAV'] != 'undefined') {
+			var len = loc['LFAV'].length;
+		} 
+		else {
+			loc['LFAV'] = [];
+			len = 0;
+		}
+		loc['LFAV'][len] = [];
+		loc['LFAV'][len].latl = 50.3247;
+		loc['LFAV'][len].lonl = 3.46556;
+		loc['LFAV'][len].pay = "$732.00";
+		loc['LFAV'][len].cargo = "<font color=Green>1 Nomadic Travel Passenger &#128042; (EBBE)</font>";
+		loc['LFAV'][len].status =
+		"Departing".replace(/\s/g,'').toLowerCase();
+		loc['LFAV'][len].dist = 56;
+		loc['LFAV'][len].dest = [];
+		loc['LFAV'][len].dest.icao = 'EBBE';
+		loc['LFAV'][len].dest.latl = 50.7578;
+		loc['LFAV'][len].dest.lonl = 4.767;
+		var mapCenter = {latl: 50.3247, lonl: 3.46556};
+	</script>
+
+				<tr class="odd">
+					<td class="updateCheckbox">
+						<input class="chkbox" type="checkbox" id="mycheckbox2" name="select" value="453721969">
+					</td>
+					<td class="numeric">$732.00</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/large-airport-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/military-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Beauvechain AB, Beauvechain, Belgium" href="https://server.fseconomy.net/airport.jsp?icao=EBBE">
+							EBBE
+						</a>
+					</td>
+					<td class="numeric">56</td>
+					<td class="numeric nowrap">
+						62 
+						<img src="FSEconomy_files/set2_1.gif">
+					</td>
+					<td><font color="Green">1 Nomadic Travel Passenger &#128042; (EBBE)</font></td>
+
+                    <td class="assignmentType">T</td>
+		        	<td>[N/A]</td>
+					<td class="nowrap">
+						
+						
+						5 days
+					</td>
+					<td>Departing</td>
+		        	<td></td>
+				</tr>
+
+	<script type="text/javascript">
+		if (typeof loc['LFAV'] != 'undefined') {
+			var len = loc['LFAV'].length;
+		} 
+		else {
+			loc['LFAV'] = [];
+			len = 0;
+		}
+		loc['LFAV'][len] = [];
+		loc['LFAV'][len].latl = 50.3247;
+		loc['LFAV'][len].lonl = 3.46556;
+		loc['LFAV'][len].pay = "$732.00";
+		loc['LFAV'][len].cargo = "<font color=Green>1 Nomadic Travel Passenger &#128042; (EBBE)</font>";
+		loc['LFAV'][len].status =
+		"Departing".replace(/\s/g,'').toLowerCase();
+		loc['LFAV'][len].dist = 56;
+		loc['LFAV'][len].dest = [];
+		loc['LFAV'][len].dest.icao = 'EBBE';
+		loc['LFAV'][len].dest.latl = 50.7578;
+		loc['LFAV'][len].dest.lonl = 4.767;
+		var mapCenter = {latl: 50.3247, lonl: 3.46556};
+	</script>
+
+				<tr class="even">
+					<td class="updateCheckbox">
+						<input class="chkbox" type="checkbox" id="mycheckbox3" name="select" value="453524592">
+					</td>
+					<td class="numeric">$732.00</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/large-airport-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/military-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Beauvechain AB, Beauvechain, Belgium" href="https://server.fseconomy.net/airport.jsp?icao=EBBE">
+							EBBE
+						</a>
+					</td>
+					<td class="numeric">56</td>
+					<td class="numeric nowrap">
+						62 
+						<img src="FSEconomy_files/set2_1.gif">
+					</td>
+					<td><font color="Green">1 Nomadic Travel Passenger &#128042; (EBBE)</font></td>
+
+                    <td class="assignmentType">T</td>
+		        	<td>[N/A]</td>
+					<td class="nowrap">
+						
+						
+						2 days
+					</td>
+					<td>Departing</td>
+		        	<td></td>
+				</tr>
+
+	<script type="text/javascript">
+		if (typeof loc['LFAV'] != 'undefined') {
+			var len = loc['LFAV'].length;
+		} 
+		else {
+			loc['LFAV'] = [];
+			len = 0;
+		}
+		loc['LFAV'][len] = [];
+		loc['LFAV'][len].latl = 50.3247;
+		loc['LFAV'][len].lonl = 3.46556;
+		loc['LFAV'][len].pay = "$732.00";
+		loc['LFAV'][len].cargo = "<font color=Green>1 Nomadic Travel Passenger &#128042; (EBBE)</font>";
+		loc['LFAV'][len].status =
+		"Departing".replace(/\s/g,'').toLowerCase();
+		loc['LFAV'][len].dist = 56;
+		loc['LFAV'][len].dest = [];
+		loc['LFAV'][len].dest.icao = 'EBBE';
+		loc['LFAV'][len].dest.latl = 50.7578;
+		loc['LFAV'][len].dest.lonl = 4.767;
+		var mapCenter = {latl: 50.3247, lonl: 3.46556};
+	</script>
+
+				<tr class="odd">
+					<td class="updateCheckbox">
+						<input class="chkbox" type="checkbox" id="mycheckbox4" name="select" value="453753375">
+					</td>
+					<td class="numeric">$732.00</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/large-airport-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/military-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Beauvechain AB, Beauvechain, Belgium" href="https://server.fseconomy.net/airport.jsp?icao=EBBE">
+							EBBE
+						</a>
+					</td>
+					<td class="numeric">56</td>
+					<td class="numeric nowrap">
+						62 
+						<img src="FSEconomy_files/set2_1.gif">
+					</td>
+					<td><font color="Green">1 Nomadic Travel Passenger &#128042; (EBBE)</font></td>
+
+                    <td class="assignmentType">T</td>
+		        	<td>[N/A]</td>
+					<td class="nowrap">
+						
+						
+						5 days
+					</td>
+					<td>Departing</td>
+		        	<td></td>
+				</tr>
+
+	<script type="text/javascript">
+		if (typeof loc['LFAV'] != 'undefined') {
+			var len = loc['LFAV'].length;
+		} 
+		else {
+			loc['LFAV'] = [];
+			len = 0;
+		}
+		loc['LFAV'][len] = [];
+		loc['LFAV'][len].latl = 50.3247;
+		loc['LFAV'][len].lonl = 3.46556;
+		loc['LFAV'][len].pay = "$732.00";
+		loc['LFAV'][len].cargo = "<font color=Green>1 Nomadic Travel Passenger &#128042; (EBBE)</font>";
+		loc['LFAV'][len].status =
+		"Departing".replace(/\s/g,'').toLowerCase();
+		loc['LFAV'][len].dist = 56;
+		loc['LFAV'][len].dest = [];
+		loc['LFAV'][len].dest.icao = 'EBBE';
+		loc['LFAV'][len].dest.latl = 50.7578;
+		loc['LFAV'][len].dest.lonl = 4.767;
+		var mapCenter = {latl: 50.3247, lonl: 3.46556};
+	</script>
+
+				<tr class="even">
+					<td class="updateCheckbox">
+						<input class="chkbox" type="checkbox" id="mycheckbox5" name="select" value="453633857">
+					</td>
+					<td class="numeric">$732.00</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/large-airport-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/military-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Beauvechain AB, Beauvechain, Belgium" href="https://server.fseconomy.net/airport.jsp?icao=EBBE">
+							EBBE
+						</a>
+					</td>
+					<td class="numeric">56</td>
+					<td class="numeric nowrap">
+						62 
+						<img src="FSEconomy_files/set2_1.gif">
+					</td>
+					<td><font color="Green">1 Nomadic Travel Passenger &#128042; (EBBE)</font></td>
+
+                    <td class="assignmentType">T</td>
+		        	<td>[N/A]</td>
+					<td class="nowrap">
+						
+						
+						3 days
+					</td>
+					<td>Departing</td>
+		        	<td></td>
+				</tr>
+
+	<script type="text/javascript">
+		if (typeof loc['LFAV'] != 'undefined') {
+			var len = loc['LFAV'].length;
+		} 
+		else {
+			loc['LFAV'] = [];
+			len = 0;
+		}
+		loc['LFAV'][len] = [];
+		loc['LFAV'][len].latl = 50.3247;
+		loc['LFAV'][len].lonl = 3.46556;
+		loc['LFAV'][len].pay = "$732.00";
+		loc['LFAV'][len].cargo = "<font color=Green>1 Nomadic Travel Passenger &#128042; (EBBE)</font>";
+		loc['LFAV'][len].status =
+		"Departing".replace(/\s/g,'').toLowerCase();
+		loc['LFAV'][len].dist = 56;
+		loc['LFAV'][len].dest = [];
+		loc['LFAV'][len].dest.icao = 'EBBE';
+		loc['LFAV'][len].dest.latl = 50.7578;
+		loc['LFAV'][len].dest.lonl = 4.767;
+		var mapCenter = {latl: 50.3247, lonl: 3.46556};
+	</script>
+
+				<tr class="odd">
+					<td class="updateCheckbox">
+						<input class="chkbox" type="checkbox" id="mycheckbox6" name="select" value="453633855">
+					</td>
+					<td class="numeric">$732.00</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/large-airport-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/military-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Beauvechain AB, Beauvechain, Belgium" href="https://server.fseconomy.net/airport.jsp?icao=EBBE">
+							EBBE
+						</a>
+					</td>
+					<td class="numeric">56</td>
+					<td class="numeric nowrap">
+						62 
+						<img src="FSEconomy_files/set2_1.gif">
+					</td>
+					<td><font color="Green">1 Nomadic Travel Passenger &#128042; (EBBE)</font></td>
+
+                    <td class="assignmentType">T</td>
+		        	<td>[N/A]</td>
+					<td class="nowrap">
+						
+						
+						3 days
+					</td>
+					<td>Departing</td>
+		        	<td></td>
+				</tr>
+
+	<script type="text/javascript">
+		if (typeof loc['LFAV'] != 'undefined') {
+			var len = loc['LFAV'].length;
+		} 
+		else {
+			loc['LFAV'] = [];
+			len = 0;
+		}
+		loc['LFAV'][len] = [];
+		loc['LFAV'][len].latl = 50.3247;
+		loc['LFAV'][len].lonl = 3.46556;
+		loc['LFAV'][len].pay = "$732.00";
+		loc['LFAV'][len].cargo = "<font color=Green>1 Nomadic Travel Passenger &#128042; (EBBE)</font>";
+		loc['LFAV'][len].status =
+		"Departing".replace(/\s/g,'').toLowerCase();
+		loc['LFAV'][len].dist = 56;
+		loc['LFAV'][len].dest = [];
+		loc['LFAV'][len].dest.icao = 'EBBE';
+		loc['LFAV'][len].dest.latl = 50.7578;
+		loc['LFAV'][len].dest.lonl = 4.767;
+		var mapCenter = {latl: 50.3247, lonl: 3.46556};
+	</script>
+
+				<tr class="even">
+					<td class="updateCheckbox">
+						<input class="chkbox" type="checkbox" id="mycheckbox7" name="select" value="453633854">
+					</td>
+					<td class="numeric">$732.00</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/large-airport-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<a title="Denain, Valenciennes, France" href="https://server.fseconomy.net/airport.jsp?icao=LFAV">
+							LFAV
+						</a>
+					</td>
+					<td style="white-space: nowrap;">
+						<img class="mapassignment" data-depart="LFAV" data-dest="EBBE" src="FSEconomy_files/military-fbo.gif" style="border-style: none; vertical-align:middle;">
+						<a title="Beauvechain AB, Beauvechain, Belgium" href="https://server.fseconomy.net/airport.jsp?icao=EBBE">
+							EBBE
+						</a>
+					</td>
+					<td class="numeric">56</td>
+					<td class="numeric nowrap">
+						62 
+						<img src="FSEconomy_files/set2_1.gif">
+					</td>
+					<td><font color="Green">1 Nomadic Travel Passenger &#128042; (EBBE)</font></td>
+
+                    <td class="assignmentType">T</td>
+		        	<td>[N/A]</td>
+					<td class="nowrap">
+						
+						
+						3 days
+					</td>
+					<td>Departing</td>
+		        	<td></td>
+				</tr>
+
+     		</tbody>
+     	</table>
+     	
+		<div class="assignments-actions">
+			<div>     
+			     <a class="link" href="javascript:checkAll(document.lflightForm.select)">Select All</a> |
+			     <a class="link" href="javascript:checkNone(document.lflightForm.select)">De-Select</a>
+		     </div>
+		     <input type="button" name="hold_Selected" class="btn btn-default" value="Hold Selected Assignments" onclick="doSubmit5(document.lflightForm.select)">
+		     <input type="button" name="add_Selected" class="btn btn-default" value="Cancel Selected Assignments" onclick="doSubmit(this.form.select)">
+		     
+		     <a href="#" onclick="updateMap()">Map My Assignments</a>	
+	     </div>
+	   </form>
+	   <hr>  
+
+		<p><strong>$5,856.00</strong>, Total pay from 8 assignments</p>
+		
+	   
+
+			<div class="container-fluid myflight-planeinfo-table-wrapper">
+				<div class="row">
+					<div class="col-md-4">
+						<table style="width: 100%;">
+							<thead>
+								<tr>
+									<th colspan="3">Aircraft</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td nowrap="nowrap" colspan="3">Cessna 208 Caravan (G-EELS)</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap" class="current">Crew:</td>
+									<td nowrap="nowrap" class="current" style="text-align:center;">1 crew member</td>
+									<td nowrap="nowrap" class="current" style="text-align:right;">77 kg</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap" colspan="2">Empty Weight:</td>
+									<td nowrap="nowrap" style="text-align:right;">2,075 kg</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap" colspan="2">Max Takeoff Weight:</td>
+									<td nowrap="nowrap" style="text-align:right;">3,985 kg</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-8">
+						<table style="width: 100%;">
+							<thead>
+								<tr>
+									<th style="border-right:1px solid #cccccc;">Payload Chart</th>
+									<th colspan="3" style="border-right:1px solid #cccccc;text-align:center;">Fuel</th>
+									<th colspan="2" style="border-right:1px solid #cccccc;text-align:center;">Pax</th>
+									<th style="border-right:1px solid #cccccc;text-align:center;">Cargo</th>
+									<th style="text-align:center;">Total<span title="Total Payload consists of Crew, Fuel, Passengers, and Cargo"> <img height="16" width="16" src="FSEconomy_files/helpicon.png"></span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td nowrap="nowrap" class="total" style="border-right:1px solid #cccccc;">Total Capacity:</td>
+									<td nowrap="nowrap" class="total" style="text-align:right;">332 gal</td>
+									<td nowrap="nowrap" class="total" style="text-align:right;">892 kg</td>
+									<td nowrap="nowrap" class="total" style="border-right:1px solid #cccccc;">&nbsp;</td>
+									<td nowrap="nowrap" class="total" style="text-align:right;">13</td>
+									<td nowrap="nowrap" class="total" style="text-align:right;border-right:1px solid #cccccc;">1,001 kg</td>
+									<td nowrap="nowrap" class="total" style="text-align:right;border-right:1px solid #cccccc;">1,833 kg</td>
+									<td nowrap="nowrap" class="total" style="text-align:right;">1,910 kg</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap" class="current" style="border-right:1px solid #cccccc;">Current Load:</td>
+									<td nowrap="nowrap" class="current" style="text-align:right;">216 gal</td>
+									<td nowrap="nowrap" class="current" style="text-align:right;">580 kg</td>
+									<td nowrap="nowrap" class="current" style="border-right:1px solid #cccccc;">(65%)</td>
+									<td nowrap="nowrap" class="current" style="text-align:right;">8</td>
+									<td nowrap="nowrap" class="current" style="text-align:right;border-right:1px solid #cccccc;">616 kg</td>
+									<td nowrap="nowrap" class="current" style="text-align:right;border-right:1px solid #cccccc;">0 kg</td>
+									<td nowrap="nowrap" class="current" style="text-align:right;">1,273 kg</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap" class="available" style="border-right:1px solid #cccccc;">Available Space:</td>
+									<td nowrap="nowrap" class="available" style="text-align:right;">116 gal</td>
+									<td nowrap="nowrap" class="available" style="text-align:right;">312 kg</td>
+									<td nowrap="nowrap" class="available" style="border-right:1px solid #cccccc;">&nbsp;</td>
+									<td nowrap="nowrap" class="available" style="text-align:right;">5</td>
+									<td nowrap="nowrap" class="available" style="text-align:right;border-right:1px solid #cccccc;">385 kg</td>
+									<td nowrap="nowrap" class="available" style="text-align:right;border-right:1px solid #cccccc;">637 kg</td>
+									<td nowrap="nowrap" class="available" style="text-align:right;">637 kg</td>
+								</tr>
+								<tr>
+									<td nowrap="nowrap" class="unavailable" style="border-right:1px solid #cccccc;">Unusable Space:</td>
+									<td nowrap="nowrap" class="unavailable" style="text-align:right;">0 gal</td>
+									<td nowrap="nowrap" class="unavailable" style="text-align:right;">0 kg</td>
+									<td nowrap="nowrap" class="unavailable" style="border-right:1px solid #cccccc;">&nbsp;</td>
+									<td nowrap="nowrap" class="unavailable" style="text-align:right;">0</td>
+									<td nowrap="nowrap" class="unavailable" style="text-align:right;border-right:1px solid #cccccc;">0 kg</td>
+									<td nowrap="nowrap" class="unavailable" style="text-align:right;border-right:1px solid #cccccc;">1,196 kg</td>
+									<td nowrap="nowrap">&nbsp;</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+  	</div>		
+  
+	   
+
+
+
+
+
+
+
+
+		
+		
+		
+		
+
+<script type="text/javascript">
+   $("#load_Selectedx").click(function(e){
+       e.preventDefault();
+       //check if there are All-in jobs in the loaded table
+       $.each($(".assignmentTable").find("td"), function(){
+           if($(this).hasClass('assignmentType')){
+               if($(this).html() == 'A'){
+       $("#countLoadedAllIn").val("1");
+               }
+           }
+       });
+    if($("#countLoadedAllIn").val() == "0"){
+  		doSubmit8(document.hflightForm.select);
+  	}else{
+  		alert('You cannot add jobs when an All-In job is loaded.');
+  	}
+   });
+
+	// Holding assignments ends ---------------------
+</script>
+
+
+
+
+			<script type="text/javascript">
+				loc['plane'] = [];
+				loc['plane'][0] = [];
+				loc['plane'][0].icao = 'LFAV';
+				loc['plane'][0].latl = 50.3247;
+				loc['plane'][0].lonl = 3.46556;
+				loc['plane'][0].status = 'plane';
+				var mapCenter = {latl: 50.3247, lonl: 3.46556}
+			</script>
+
+	<div class="myflight-aircraft">
+		<h2>Aircraft</h2>
+		<div class="myflight-aircraft--container">
+	  	<div class="dataTable"> 
+	  		<div class="myflight-aircraft--model">
+	  			<div>
+	  				<h3>Cessna 208 Caravan</h3>
+	  				<p><a href="https://server.fseconomy.net/aircraftlog.jsp?id=131">G-EELS</a></p>
+	  			</div>
+	  			<div>
+     			<a class="btn btn-default" href="javascript:doSubmit2('131')">Cancel</a>
+     			<a class="btn btn-default" href="https://server.fseconomy.net/refuel.jsp?id=131">Refuel</a>
+
+	  			</div>
+	  		</div>
+	  		
+	  		<div class="myflight-aircraft--basic-info">
+	  			<div>
+	  				<h4>Equipment</h4>
+	  				<p>IFR/AP/GPS</p>			
+	  			</div>
+	  			<div>
+	  				<h4>Location</h4>
+	  				<p><a href="https://server.fseconomy.net/airport.jsp?icao=LFAV"> LFAV</a></p>
+	  				<h4>Home Base</h4>
+	  				<p><a href="https://server.fseconomy.net/airport.jsp?icao=EDDC"> EDDC</a></p>
+	  			</div>
+	  			<div>
+	  				<h4>Rental price</h4>
+	  				<p>$0 Hour/Wet</p>
+	  		
+	  				
+	  			</div>
+	  			
+	  			<div>
+	  				<h4>Fuel</h4>
+	  				<p>216 gal <span>(65%)</span></p>
+					<h4>Est. Flt Time</h4>
+					<p>03:55 <span style="font-size: 1.0rem">(hh:mm)</span></p>	  			
+					<h4>Est. Dist</h4>
+					<p>713 <span style="font-size: 1.0rem">(nm)</span></p>	  			
+				</div>
+	  		</div>
+	  		
+	  		<div class="myflight-aircraft--keep-release">
+	  			<div>
+	  				<h3>Aircraft Release / Hold</h3>
+	  			</div>
+	  			<div>
+	  				<a class="btn btn-default" href="#holdreleasehelp" data-toggle="collapse">Show Help</a>
+	  			</div>
+	  		</div>
+	  		<div>
+			   	<form method="post" action="userctl" name="aircraftForm" id="aircraftForm">
+				   	<input type="hidden" name="event" value="Aircraft">
+				   	<input type="hidden" name="type" value="remove">
+				   	<input type="hidden" name="id">
+				   	<input type="hidden" name="hold">
+					<input type="hidden" name="returnpage" value="/myflight.jsp">
+					
+					<fieldset>
+						<!--
+						<div class="panel panel-info">
+							<div class="panel-heading">
+    							<h3 class="panel-title">Panel title</h3><span class="caret"></span>
+  							</div>
+  							<div class="panel-body">
+    							Panel content
+ 							</div>
+						</div>
+						-->
+						<div id="holdreleasehelp" class="collapse">
+							<p>
+								At the completion of a flight with no assignments left on board,
+								this aircraft rental can be released immediately or kept in your
+								name for a short period of time. In the latter case,  the rental
+								timer will be reset when you land, and the aircraft rental will be
+								released if you do not start your next flight before the timer expires.
+							</p>
+						</div>
+						<p>
+							When no assignments remain on board after landing:
+						</p>
+						<div class="radio">
+							<label>
+								<input type="radio" name="holdrelease" value="0" checked="checked" onchange="doSubmitX('131', false)">
+								the aircraft rental is set to be <b>released immediately</b>
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="holdrelease" value="1" onchange="doSubmitX('131', false)">
+								the aircraft rental is set to be kept in your name
+							</label>
+						</div>
+					</fieldset>
+			     </form>
+		     </div>	  			
+		</div>
+	
+	<!-- calculations ================================================ -->
+	<div class="dataTable aircraft-calculations">
+		<h4>Fuel Calculations for G-EELS</h4>
+		<p><span style="color: #FF0033; "><strong>CAUTION:</strong>  On larger aircraft, Max Fuel can be off by as much as 5 gallons due to floating point issues.</span></p>
+		<form>
+			<div class="aircraft-calculations--container">
+				<div class="form-group">
+					<label for="mypayload">Cargo (kg)</label>
+					<input id="mypayload" class="form-control" value="0" maxlength="5">
+				</div>
+				<div class="form-group">
+					<label for="mypax"># Pax</label>
+					<select id="mypax" class="form-control">
+	
+						<option value="0" selected="selected">0</option>
+	
+						<option value="1">1</option>
+	
+						<option value="2">2</option>
+	
+						<option value="3">3</option>
+	
+						<option value="4">4</option>
+	
+						<option value="5">5</option>
+	
+						<option value="6">6</option>
+	
+						<option value="7">7</option>
+	
+						<option value="8">8</option>
+	
+						<option value="9">9</option>
+	
+						<option value="10">10</option>
+	
+						<option value="11">11</option>
+	
+						<option value="12">12</option>
+	
+						<option value="13">13</option>
+		
+	     			</select>
+				</div>
+				<div class="form-group">
+					<input id="calcFuel" type="button" class="btn btn-default" value="Calculate">
+				</div>
+				<div class="form-group">
+					<label for="mygallons">Max fuel</label>
+					<input id="mygallons" type="text" class="form-control" size="16" readonly="readonly">
+				</div>
+			
+			</div>
+		</form>
+		
+		<form>
+			<div class="aircraft-calculations--container">
+				<div class="form-group">
+					<label for="entgallons">Enter fuel (gal)</label>
+					<input id="entgallons" type="text" class="form-control" maxlength="5">
+				</div>
+				<div class="form-group">
+					<input id="calcLoad" type="button" class="btn btn-default" value="Calculate">
+				</div>
+				<div class="form-group">
+					<label for="expayload">Max Cargo / Pax</label>
+					<input id="expayload" class="form-control" type="text" size="16" readonly="readonly">
+				</div>
+			</div>
+		</form>
+
+
+	<form>
+		<div class="aircraft-calculations--container">
+			<div class="form-group">
+				<label for="">Enter distance (nm)</label>
+				<input id="entdist" class="form-control" type="text" maxlength="5">
+			</div>
+			<div class="form-group">
+				<input id="calcestfuel" type="button" class="btn btn-default" value="Calculate">
+			</div>
+			<div class="form-group">
+				<label for="">FSE Expected fuel (Expected Time)*</label>
+				<input id="exfuel" class="form-control" type="text" size="16" readonly="readonly">
+			</div>
+		</div>
+		<div>
+			*Note: Read manual <a target="_blank" href="https://sites.google.com/site/fseoperationsguide/aircraft/time-and-fuel-requirements">HERE</a> to understand this calculated fuel value
+			
+		</div>
+	</form>
+
+	<script>
+
+	$("#calcFuel").click(function () {
+		var pl = parseInt(Math.min($("#mypayload").val()));
+		var pax = parseInt($("#mypax").val());
+		var totalpayload = pax * 77 + pl;
+		var percent = Math.round(100 - (25 * (totalpayload - 941) / (1164 - 941)));
+		var cap = 332.0 * percent / 100;
+		var maxgallons = cap;
+		var maxCargo = 1833;
+
+		if (maxgallons <= 0 || pl > maxCargo)
+		{
+			$("#mygallons").val('Exceeds Limits');
+		}
+		else
+		{
+			$("#mygallons").val(Math.min(maxgallons, 332.0) + ' gallons');
+		}
+	});
+
+	$("#calcLoad").click(function ()
+	{
+		var gals = $("#entgallons");
+		var pload = $("#expayload");
+		var percent = Math.min(gals.val() / 332.0 * 100, 100);
+		var maxpayload = Math.floor((100 - percent) * ((1164 - 941) / 25) + 941);
+		var maxpax = Math.min(13, Math.floor(maxpayload / 77));
+		var maxcargo = Math.min(maxpayload, 1833);
+
+		if (gals.val() > 332.0) {
+			pload.val('Exceeds Limits');
+		}
+		else {
+			pload.val(maxcargo + ' kg / ' + maxpax + ' pax');
+		}
+	});
+
+	$("#calcestfuel").click(function () {
+		var dist = parseInt(Math.min($("#entdist").val()));
+		var time = dist / 182;
+		var fuel = 55 * time;
+
+		if (fuel > 332 )
+		{
+			$("#exfuel").val('Exceeds Max Fuel');
+		}
+		else
+		{
+			$("#exfuel").val(Math.min(Math.round(fuel+.5)) + ' gal (' + time.toFixed(1) + ' hr)');
+		}
+	});
+	</script>
+
+
+				</div> <!-- calculators closes -->
+			</div><!-- container closes -->
+		</div> <!-- myflight-aircraft closes -->
+	</div>
+</div>
+
+	<div class="modal fade" id="mapModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button class="close" aria-hidden="true" type="button" data-dismiss="modal">ï¿½</button>
+					<h4 class="modal-title">Assignment Map</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container">
+						<div class="row" id="mapData">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Confirm flight for group Modal -->
+	<div class="modal fade" id="confirm-group" tabindex="-1" role="dialog" aria-labelledby="confirm-group">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Do you want to fly for</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<p id="selectedGroup"></p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-primary" id="confirm-flight-for-group">Confirm group</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
+    <div style="font-size: 9pt;">Elapsed Time: 0.01</div>
+
+
+</body></html>

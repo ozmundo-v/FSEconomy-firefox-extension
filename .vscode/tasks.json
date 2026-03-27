@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Open Firefox Extension Debugging",
+      "type": "shell",
+      "command": "start firefox.exe about:debugging#/runtime/this-firefox",
+      "problemMatcher": []
+    }
+  ]
+}

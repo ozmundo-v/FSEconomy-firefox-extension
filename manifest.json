@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "name": "FSEconomy Extension",
+  "version": "1.0",
+  "description": "Extends the base functionality of FSEconomy with some helpful tweaks.",
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://server.fseconomy.net/airport.jsp*"],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://server.fseconomy.net/myflight.jsp*"],
+      "js": ["myflight-script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_action": {
+    "default_title": "FSEconomy Extension",
+    "default_icon": { 
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "permissions": []
+}
