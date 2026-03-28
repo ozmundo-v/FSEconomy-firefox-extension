@@ -37,10 +37,9 @@ After changing scripts, use **Reload** on the extension card or load the manifes
 | `myflight-script.js` | My Flight page + SimBrief button |
 | `background.js` | Optional background script |
 | `icons/` | Toolbar icons (`icon-16.png`, `icon-48.png`, `icon-128.png`) — required for a signed build |
-| `Example Pages/` | Saved HTML snapshots for reference while editing selectors; not part of the shipped add-on |
 
 ## Packaging for AMO
 
-Ship a **zip** that contains only what the browser loads: `manifest.json`, the JS files, and the `icons/` directory. Omit `Example Pages/`, `.vscode/`, and other dev-only files unless you intend to include them for some reason.
+Ship a **zip** that contains only what the browser loads: `manifest.json`, the JS files, and the `icons/` directory. Omit dev-only tooling or local configs if you keep any alongside the project.
 
 Ensure the three icon paths in `manifest.json` exist before upload or validation will fail.
