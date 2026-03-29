@@ -4,6 +4,10 @@
 // orig/dest/reg/pax (and similar) as URL query parameters where supported.
 (function () {
   const SIMBRIEF_DISPATCH = 'https://www.simbrief.com/system/dispatch.php';
+  const METAR_BASE = 'https://metar-taf.com/metar/';
+  const NAVIGRAPH_BASE = 'https://charts.navigraph.com/airport/';
+  const NAVIGRAPH_QUERY =
+    '?informationSection=General&procedureSection=Approaches&section=Proc&chartCategory=ARR&weatherSection=METAR&networksSection=Gates&ATISSection=Real';
 
   function findReadyTable() {
     const block = document.querySelector('.myflight-assignments--ready');
@@ -84,9 +88,14 @@
     window.open(u.toString(), '_blank', 'noopener,noreferrer');
   }
 
+  function openDestMetar(dest) {
+    const u = new URL(encodeURIComponent(dest), METAR_BASE);
+    window.open(u.toString(), '_blank', 'noopener,noreferrer');
+  }
+
   function addSimBriefControl() {
     const table = findReadyTable();
-    if (!table || document.getElementById('fse-simbrief-open')) return;
+    if (!table || document.getElementById('fse-simbrief-open') || document.getElementById('fse-dest-metar-open')) return;
 
     const caption = table.querySelector('caption');
     if (!caption) return;
@@ -97,6 +106,9 @@
     btn.className = 'btn btn-primary btn-sm';
     btn.style.marginLeft = '12px';
     btn.style.verticalAlign = 'middle';
+    btn.style.minWidth = '130px';
+    btn.style.fontWeight = '700';
+    btn.style.textAlign = 'center';
     btn.textContent = 'SimBrief dispatch';
     btn.title =
       'Open SimBrief with Location → Dest. Uses the checked assignment if one is selected; otherwise the first row.';
@@ -121,6 +133,79 @@
     });
 
     caption.appendChild(btn);
+
+    const navBtn = document.createElement('button');
+    navBtn.id = 'fse-navigraph-open';
+    navBtn.type = 'button';
+    navBtn.className = 'btn btn-sm';
+    navBtn.style.marginLeft = '8px';
+    navBtn.style.verticalAlign = 'middle';
+    navBtn.style.minWidth = '130px';
+    navBtn.style.fontWeight = '700';
+    navBtn.style.textAlign = 'center';
+    navBtn.textContent = 'Navigraph';
+    navBtn.title = 'Open Navigraph Charts in a new tab.';
+
+    navBtn.addEventListener('click', function () {
+      const row = getTargetRow(table);
+      if (!row) {
+        window.alert('No ready-to-depart assignments found.');
+        return;
+      }
+      const dest = icaoFromCell(row.cells[4]);
+      if (!dest) {
+        window.alert('Could not read destination airport code for this assignment.');
+        return;
+      }
+      const url = `${NAVIGRAPH_BASE}${encodeURIComponent(dest)}${NAVIGRAPH_QUERY}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+
+    caption.appendChild(navBtn);
+
+    const metarBtn = document.createElement('button');
+    metarBtn.id = 'fse-dest-metar-open';
+    metarBtn.type = 'button';
+    metarBtn.className = 'btn btn-sm';
+    metarBtn.style.marginLeft = '8px';
+    metarBtn.style.verticalAlign = 'middle';
+    metarBtn.style.minWidth = '130px';
+    metarBtn.style.fontWeight = '700';
+    metarBtn.style.textAlign = 'center';
+    metarBtn.style.color = '#111';
+    metarBtn.style.borderColor = '#c56a00';
+    metarBtn.style.backgroundImage =
+      'repeating-linear-gradient(90deg, #f7941e 0, #f7941e 10px, #ffffff 10px, #ffffff 20px)';
+    metarBtn.textContent = 'METAR';
+    metarBtn.title =
+      'Open destination METAR (metar-taf.com) for the checked assignment destination, or the first row.';
+
+    function refreshMetarButtonLabel() {
+      const row = getTargetRow(table);
+      const dest = row ? icaoFromCell(row.cells[4]) : '';
+      metarBtn.textContent = dest ? `${dest} METAR` : 'METAR';
+    }
+
+    metarBtn.addEventListener('click', function () {
+      const row = getTargetRow(table);
+      if (!row) {
+        window.alert('No ready-to-depart assignments found.');
+        return;
+      }
+      const dest = icaoFromCell(row.cells[4]);
+      if (!dest) {
+        window.alert('Could not read destination airport code for this assignment.');
+        return;
+      }
+      openDestMetar(dest);
+    });
+
+    table.addEventListener('change', refreshMetarButtonLabel);
+    table.addEventListener('input', refreshMetarButtonLabel);
+    table.addEventListener('click', refreshMetarButtonLabel);
+    refreshMetarButtonLabel();
+
+    caption.appendChild(metarBtn);
   }
 
   function tryInit() {
