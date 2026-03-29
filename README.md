@@ -36,10 +36,10 @@ After changing scripts, use **Reload** on the extension card or load the manifes
 | `content-script.js` | Airport page behavior |
 | `myflight-script.js` | My Flight page + SimBrief button |
 | `background.js` | Optional background script |
-| `icons/` | Toolbar icons (`icon-16.png`, `icon-48.png`, `icon-128.png`) — required for a signed build |
+| `icons/` | Toolbar icons (`icon_16.png`, `icon_32.png`, `icon_48.png`, `icon_128.png`) |
 
 ## Packaging for AMO
 
 Ship a **zip** that contains only what the browser loads: `manifest.json`, the JS files, and the `icons/` directory. Omit dev-only tooling or local configs if you keep any alongside the project.
 
-Ensure the three icon paths in `manifest.json` exist before upload or validation will fail.
+Ensure every path in `manifest.json` under `browser_action.default_icon` exists before upload or validation will fail.
